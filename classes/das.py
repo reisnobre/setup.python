@@ -25,10 +25,9 @@ cpf = re.compile('[0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2}')
 class Das():
     """."""
 #
-    def __init__(self, file_name, base_64):
+    def __init__(self, temp_file):
         """."""
-        self._file_name = file_name
-        self._base_64 = base_64
+        self._temp_file = temp_file
 #
     def format(self, raw):
         """."""
@@ -68,19 +67,20 @@ class Das():
             "barcode": set(barcodes).pop() if len(barcodes) != 0 else None
         }
 
-    def get_file_name(self):
+    def get_temp_file(self):
         """."""
-        return self._file_name
+        return self._temp_file
 
     def parse(self):
         """."""
-        binary = base64.b64decode(self._base_64)
-        if self._file_name.split('.').pop().lower() == 'pdf':
-            temp_file = tempfile.NamedTemporaryFile(prefix='{}_'.format(self._file_name))
-            image = convert_from_bytes(binary)[0]
-            with io.BytesIO() as out:
-                image.save(out, format='JPEG')
-                temp_file.write(out.getvalue())
-            text_annotations = vision(temp_file)
-            return self.format(text_annotations[1:])
+        with open(self._temp_file, 'rb') as f:
+            binary = f.read()
+            if self._temp_file.split('.').pop().lower() == 'pdf':
+                temp_file = tempfile.NamedTemporaryFile(prefix='{}_'.format(self._temp_file))
+                image = convert_from_bytes(binary)[0]
+                with io.BytesIO() as out:
+                    image.save(out, format='JPEG')
+                    temp_file.write(out.getvalue())
+                return self.format(vision(temp_file))
         return self.format(vision(f=binary))
+
