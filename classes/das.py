@@ -11,6 +11,7 @@ from pdf2image import convert_from_bytes
 from classes.vision import vision
 import tempfile
 import io
+import json
 #
 cnpj = re.compile('[0-9]{2}[.]{1}[0-9]{3}[.]{1}[0-9]{3}[/]{1}[0-9]{4}[-]{1}[0-9]{2}')
 curr = re.compile('^\s*(?:[1-9]\d{0,2}(?:\.\d{3})*|0)(?:,\d{1,2}){1}$')
@@ -58,15 +59,7 @@ class Das():
                 if len(code) == 48 and barcode_string.match(code):
                     barcodes.append(code)
 
-        return {
-            "cnpj": set(cnpjs).pop() if len(cnpjs) != 0 else None,
-            "cpf": set(cpfs).pop() if len(cpfs) != 0 else None,
-            "curr": max([float(c.replace('.', '', 1).replace(',', '.')) for c in currs]) if len(currs) != 0 else None,
-            "comp_date": set(comp_dates).pop() if len(comp_dates) != 0 else None,
-            "due_date": set(due_dates).pop() if len(due_dates) != 0 else None,
-            "barcode": set(barcodes).pop() if len(barcodes) != 0 else None
-        }
-
+        return {"cnpj": set(cnpjs).pop() if len(cnpjs) != 0 else None, "cpf": set(cpfs).pop() if len(cpfs) != 0 else None, "curr": max([float(c.replace('.', '', 1).replace(',', '.')) for c in currs]) if len(currs) != 0 else None, "comp_date": set(comp_dates).pop() if len(comp_dates) != 0 else None, "due_date": set(due_dates).pop() if len(due_dates) != 0 else None, "barcode": set(barcodes).pop() if len(barcodes) != 0 else None}
     def get_temp_file(self):
         """."""
         return self._temp_file
@@ -82,5 +75,5 @@ class Das():
                     image.save(out, format='JPEG')
                     temp_file.write(out.getvalue())
                 return self.format(vision(temp_file))
-        return self.format(vision(f=binary))
+        return json.dumps(self.format(vision(f=binary)))
 
