@@ -69,7 +69,7 @@ class Das():
         with open(self._temp_file, 'rb') as f:
             binary = f.read()
             if self._temp_file.split('.').pop().lower() == 'pdf':
-                temp_file = tempfile.NamedTemporaryFile(prefix='{}_'.format(self._temp_file))
+                temp_file = tempfile.NamedTemporaryFile()
                 image = convert_from_bytes(binary)[0]
                 with io.BytesIO() as out:
                     image.save(out, format='JPEG')

@@ -5,7 +5,6 @@ import time
 
 CLIENT = vision.ImageAnnotatorClient()
 
-
 def vision(temp_file=None, f=None):
     """."""
     if temp_file is None:
