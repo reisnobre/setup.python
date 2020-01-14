@@ -3,7 +3,8 @@ import sys
 
 from classes.das import Das
 
-root = '/Users/reisnobre/Projects/process.vision/'
+# root = '/Users/reisnobre/Projects/process.vision/'
+root = '/home/reisnobre/vision/'
 
 if __name__ == "__main__":
     temp_file = sys.argv[1]
