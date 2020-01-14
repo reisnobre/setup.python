@@ -74,6 +74,6 @@ class Das():
                 with io.BytesIO() as out:
                     image.save(out, format='JPEG')
                     temp_file.write(out.getvalue())
-                return self.format(vision(temp_file))
+                return json.dumps(self.format(vision(temp_file)))
         return json.dumps(self.format(vision(f=binary)))
 
